@@ -14,10 +14,22 @@ pipeline {
                 sh 'cd angular; ls'
             }
         }
-        
-        stage ('Cleanup') {
+
+        stage('Build') {
             steps {
-                echo 'Done'
+                echo 'Build the project (npm build)'
+            }
+        }
+
+        stage('Testing') {
+            steps {
+                echo 'Run unit tests'
+            }
+        }
+
+        stage('Deploying') {
+            steps {
+                echo 'Deploy with ansible & docker'
             }
         }
     }
