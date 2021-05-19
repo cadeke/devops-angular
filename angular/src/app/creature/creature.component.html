@@ -1,0 +1,38 @@
+<h1 class="title">Creatures Overview</h1>
+<h2 class="subtitle">Here you can look up information about the creatures of the Avatar universe.</h2>
+
+<button class="button" (click)="callApi('creatures')">Get Creatures</button>
+
+<table class="table is-striped" *ngIf="data != null && data.length > 0">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Species</th>
+            <th>Affiliation</th>
+            <th>Species image</th>
+            <th>Species description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let creature of data">
+            <td>{{creature.id}}</td>
+            <td>{{creature.name}}</td>
+            <td>{{creature.species.name}}</td>
+            <td>{{creature.affiliation.name}}</td>
+            <td><img src="{{creature.species.image}}" alt="Species image" width="200"></td>
+            <td>{{creature.species.description}}</td>
+            <!-- <table class="table">
+                <tbody>
+                    <tr>
+                        <td *ngFor="let episode of creature.appearsInEpisode">{{episode.name}}</td>
+                    </tr>    
+                </tbody>
+            </table> -->
+        </tr>    
+    </tbody>
+</table>
+
+<br><br>
+<!-- <input type="text"><button (click)="callApi('creature/1')">GetByID</button>
+<p>{{data}}</p> -->

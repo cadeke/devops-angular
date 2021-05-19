@@ -1,0 +1,31 @@
+<h1 class="title">Joke API</h1>
+<h2 class="subtitle">Here you can get a joke from an external API. You can use the dropdown menus to select which kind of joke you would like.</h2>
+
+<div class="field" style="display: inline-block;">
+    <div class="control">
+      <div class="select">
+        <select #category>
+          <option value="-">Select category</option>
+          <option value="Any">All types</option>
+          <option value="Misc">Miscellaneous</option>
+          <option value="Programming">Programming</option>
+          <option value="Dark">Dark</option>
+          <option value="Pun">Pun</option>
+        </select>
+      </div>
+    </div>
+</div>
+
+<button class="button" (click)=callApi()>Get joke</button>
+
+<div *ngIf="data != null && data.type == 'single'">
+    <p><b>Joke</b></p>
+    <p>{{data.joke}}</p>
+</div>
+
+<div *ngIf="data != null && data.type == 'twopart'">
+    <p><b>Setup</b></p>
+    <p>{{data.setup}}</p>
+    <p><b>Punchline</b></p>
+    <p>{{data.delivery}}</p>
+</div>

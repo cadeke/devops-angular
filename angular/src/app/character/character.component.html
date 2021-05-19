@@ -1,0 +1,40 @@
+<h1 class="title">Character Overview</h1>
+<h2 class="subtitle">Here you can look up information about the characters of the Avatar universe.</h2>
+
+<button class="button" (click)="callApi('characters')">Get Characters</button>
+
+<table class="table is-striped" *ngIf="data != null && data.length > 0">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Voice actor</th>
+            <th>Ability</th>
+            <th>Affiliation</th>
+            <th>IsBender</th>
+            <th>IsAvatar</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let character of data">
+            <td>{{character.id}}</td>
+            <td>{{character.name}}</td>
+            <td>{{character.voicedBy.name}}</td>
+            <td>{{character.ability.name}}</td>
+            <td>{{character.affiliation.name}}</td>
+            <td>{{character.isBender}}</td>
+            <td>{{character.isAvatar}}</td>
+            <!-- <table class="table">
+                <tbody>
+                    <tr>
+                        <td *ngFor="let episode of character.appearsInEpisode">{{episode.name}}</td>
+                    </tr>    
+                </tbody>
+            </table> -->
+        </tr>    
+    </tbody>
+</table>
+
+<br><br>
+<!-- <input type="text"><button (click)="callApi('characters/1')">GetByID</button>
+<p>{{data}}</p> -->
