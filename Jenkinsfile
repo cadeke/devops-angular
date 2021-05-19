@@ -4,20 +4,21 @@ pipeline {
     stages {
         stage('Clone repo') {
             steps{
+                // Clone repo and change dir
                 git 'https://github.com/casperdekeyser/devops-angular.git'
+                sh 'cd angular' 
             }
         }
         
         stage('Install dependencies') {
             steps {
-                echo 'Install node, angular-cli, etc.'
-                sh 'cd angular; ls'
+                sh 'npm install'
             }
         }
 
         stage('Build') {
             steps {
-                echo 'Build the project (npm build)'
+                sh 'npm build'
             }
         }
 
