@@ -1,5 +1,5 @@
 ---
-- hosts: 192.168.0.119
+- hosts: centos7
   user: root
 
   task:
