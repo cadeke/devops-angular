@@ -2,11 +2,11 @@
 - hosts: centos7
   user: root
 
-  task:
+  tasks:
     - name: BASIC update
       ansible.builtin.shell: sudo yum update -y
 
-    - name: BASIC update
+    - name: BASIC install nc
       yum:
         name: nc
         state: latest
