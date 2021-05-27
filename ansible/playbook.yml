@@ -1,6 +1,6 @@
 ---
 
-- hosts: testserver
+- hosts: centos7
   user: root
 
   tasks:
