@@ -8,5 +8,5 @@
 
     - name: BASIC install nc
       yum:
-	      name: nc
+        name: nc
         state: latest
