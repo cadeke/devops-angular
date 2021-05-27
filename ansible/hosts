@@ -1,2 +1,2 @@
 [centos7]
-192.168.0.119   ansible_user=root
+192.168.0.119 ansible_user=root become=yes become-user=root
