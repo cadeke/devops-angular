@@ -5,8 +5,8 @@ RUN dnf update -y
 
 RUN dnf install httpd -y
 
-COPY dist/angular/ /var/www/html
+COPY /var/jenkins_home/workspace/angular-project/dist/angular/* /var/www/html
 
 CMD ["/usr/sbin/httpd","-D","FOREGROUND"]
 
-EXPOSE 4200
+EXPOSE 80
