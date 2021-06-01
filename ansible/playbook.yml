@@ -6,5 +6,5 @@
   tasks:
     - name: Copy files to testing environment
       copy: 
-        src: /var/jenkins_home/workspace/angular-project/dist/angular
+        src: /var/jenkins_home/workspace/angular-project/angular/dist/angular/
         dest: /root/pipeline-storage/testing_1
