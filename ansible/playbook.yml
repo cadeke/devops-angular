@@ -7,4 +7,4 @@
     - name: Copy files to testing environment
       copy: 
         src: /var/jenkins_home/workspace/angular-project/dist/angular
-        des: /home/casper/pipeline-storage/testing_1
+        des: /root/pipeline-storage/testing_1
