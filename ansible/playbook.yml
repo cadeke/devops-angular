@@ -39,7 +39,7 @@
           - python2-pip
         state: latest
 
-    - name: DOCKER install python for docker   
+    - name: DOCKER install python for docker
       ansible.builtin.shell: pip install docker-py
 
     - name: Install docker-compose
