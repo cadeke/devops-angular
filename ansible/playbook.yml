@@ -4,7 +4,22 @@
   user: root
 
   tasks:
-    - name: Copy files to testing environment
+    - name: Install docker-compose
+      get_url:
+        url: https://github.com/docker/compose/releases/download/1.29.2/docker-compose-Linux-x86_64
+        dest: /usr/local/bin/docker-compose
+        mode: '771'
+      become: yes
+
+    - name: Transfer docker-compose.yml
+      copy:
+        src: /var/jenkins_home/workspace/angular-project/docker-compose.yml
+        dest: /root/docker/docker-compose.yml
+
+    - name: Run docker-compose.yml
+      command: chdir=/root/docker docker-compose up -d
+
+    - name: Deploy to testing-compose-1 environment
       copy: 
         src: /var/jenkins_home/workspace/angular-project/angular/dist/angular/
-        dest: /root/pipeline_storage/testing_1/
+        dest: /root/docker/testing-compose-1

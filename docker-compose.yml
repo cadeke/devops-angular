@@ -1,0 +1,23 @@
+version: '2'
+services:
+  testing-container-1:
+    image: httpd:latest
+    container_name: testing-compose-1
+    stdin_open: true
+    tty: true
+    volumes:
+      - /root/docker/testing-compose-1:/usr/local/apache2/htdocs
+    restart: unless-stopped
+    ports:
+      - "9005:80"
+
+  testing-container-2:
+    image: httpd:latest
+    container_name: testing-compose-2
+    stdin_open: true
+    tty: true
+    volumes:
+      - /root/docker/testing-compose-2:/usr/local/apache2/htdocs
+    restart: unless-stopped
+    ports:
+      - "9006:80"
