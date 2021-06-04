@@ -6,7 +6,7 @@
   tasks:
 
     - name: Update
-      ansible.builtin.shell: sudo yum update -y
+      command: sudo yum update -y
 
     - name: DOCKER add repo
       get_url:
@@ -42,6 +42,9 @@
           - python3-pip
           - python2-pip
         state: latest
+
+    - name: DOCKER install python for docker
+      command: pip install docker-py
 
     - name: Install docker-compose
       get_url:
