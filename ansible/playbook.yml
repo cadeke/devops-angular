@@ -4,6 +4,44 @@
   user: root
 
   tasks:
+    - name: DOCKER add repo
+      get_url:
+        url: https://download.docker.com/linux/centos/docker-ce.repo
+        dest: /etc/yum.repos.d/docker-ce.repo
+      become: yes
+
+    - name: DOCKER enable docker repo
+      ini_file:
+        dest: /etc/yum.repos.d/docker-ce.repo
+        section: 'docker-ce-edge'
+        option: enabled
+        value: 0
+      become: yes
+
+    - name: DOCKER install docker
+      package:
+        name: docker-ce
+        state: latest
+      become: yes
+
+    - name: DOCKER enable docker
+      service:
+        name: docker
+        state: started
+        enabled: yes
+      become: yes
+
+    - name: DOCKER install dependencies
+      yum:
+        name:
+          - python3 
+          - python3-pip
+          - python2-pip
+        state: latest
+
+    - name: DOCKER install python for docker   
+      ansible.builtin.shell: pip install docker-py
+
     - name: Install docker-compose
       get_url:
         url: https://github.com/docker/compose/releases/download/1.29.2/docker-compose-Linux-x86_64
@@ -28,3 +66,13 @@
       copy: 
         src: /var/jenkins_home/workspace/angular-project/angular/dist/angular/
         dest: /root/docker/production-container-1
+
+    - name: Deploy to production environment
+      copy: 
+        src: /var/jenkins_home/workspace/angular-project/angular/dist/angular/
+        dest: /root/docker/production-container-2
+
+    - name: Deploy to production environment
+      copy: 
+        src: /var/jenkins_home/workspace/angular-project/angular/dist/angular/
+        dest: /root/docker/production-container-3
