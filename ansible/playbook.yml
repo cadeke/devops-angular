@@ -6,7 +6,8 @@
   tasks:
 
     - name: Update
-      command: sudo yum update -y
+      command: yum update -y
+      become: yes
 
     - name: DOCKER add repo
       get_url:
