@@ -25,5 +25,5 @@
         dest: /root/website
 
     - name: Deploy to testing environment
-      command: echo /root/docker/testing-container-1 /root/docker/production-container-1 /root/docker/production-container-2 /root/docker/production-container-3 | xargs -n 1 cp /root/website/*
+      command: echo /root/docker/testing-container-1 /root/docker/production-container-1 /root/docker/production-container-2 /root/docker/production-container-3 | xargs -n 1 cp /root/website/
 
