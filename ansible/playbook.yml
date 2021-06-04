@@ -19,11 +19,12 @@
     - name: Run docker-compose.yml
       command: chdir=/root/docker docker-compose up -d
 
-    - name: Transfer project files
+    - name: Deploy to testing environment
       copy: 
         src: /var/jenkins_home/workspace/angular-project/angular/dist/angular/
-        dest: /root/website
+        dest: /root/docker/testing-container-1
 
-    - name: Deploy to testing environment
-      command: echo /root/docker/testing-container-1 /root/docker/production-container-1 /root/docker/production-container-2 /root/docker/production-container-3 | xargs -n 1 cp /root/website/
-
+    - name: Deploy to production environment
+      copy: 
+        src: /var/jenkins_home/workspace/angular-project/angular/dist/angular/
+        dest: /root/docker/production-container-1
