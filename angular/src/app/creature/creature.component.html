@@ -1,38 +1,437 @@
-<h1 class="title">Creatures Overview</h1>
-<h2 class="subtitle">Here you can look up information about the creatures of the Avatar universe.</h2>
+<h1 class="title is-1">Creatures Overview</h1>
+<h2 class="subtitle">
+  Read, create, delete or update creatures from the Avatar universe!
+</h2>
+<br />
 
-<button class="button" (click)="callApi('creatures')">Get Creatures</button>
+<!-- List all creatures -->
+<h3 class="title">Look up all creatures</h3>
+<p class="subtitle">
+  Using the button, you can get an overview of all the characters. There will
+  appear more buttons in order to sort the data.
+</p>
+<button class="button is-primary" (click)="callApiForAll()">
+  {{ showCreaturesButtonText }}
+</button>
+<br />
 
-<table class="table is-striped" *ngIf="data != null && data.length > 0">
-    <thead>
-        <tr>
-            <th>Id</th>
-            <th>Name</th>
-            <th>Species</th>
-            <th>Affiliation</th>
-            <th>Species image</th>
-            <th>Species description</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let creature of data">
-            <td>{{creature.id}}</td>
-            <td>{{creature.name}}</td>
-            <td>{{creature.species.name}}</td>
-            <td>{{creature.affiliation.name}}</td>
-            <td><img src="{{creature.species.image}}" alt="Species image" width="200"></td>
-            <td>{{creature.species.description}}</td>
-            <!-- <table class="table">
-                <tbody>
-                    <tr>
-                        <td *ngFor="let episode of creature.appearsInEpisode">{{episode.name}}</td>
-                    </tr>    
-                </tbody>
-            </table> -->
-        </tr>    
-    </tbody>
+<table class="table is-striped" *ngIf="creatureList">
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Name</th>
+      <th>Species</th>
+      <th>Affiliation</th>
+      <th>Species image</th>
+      <th>Species description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let creature of creatureList">
+      <td>{{ creature.id }}</td>
+      <td>{{ creature.name }}</td>
+      <td>{{ creature.species.name }}</td>
+      <td>{{ creature.affiliation.name }}</td>
+      <td>
+        <img
+          src="{{ creature.species.image }}"
+          alt="Species image"
+          width="200"
+        />
+      </td>
+      <td>{{ creature.species.description }}</td>
+    </tr>
+  </tbody>
+</table>
+<div *ngIf="creatureList">
+  <p>
+    With these buttons you can navigate between pages of data.
+    <strong>Current page: </strong>{{ currentPage + 1 }}/{{ maxPage }}
+  </p>
+  <button
+    class="button is-light"
+    (click)="switchPage(false, sort.value, dir.value)"
+  >
+    << Previous page
+  </button>
+  <button
+    class="button is-light"
+    (click)="switchPage(true, sort.value, dir.value)"
+  >
+    Next page >>
+  </button>
+  <br /><br />
+  <p>With this choice field you can sort the data.</p>
+  <div class="select">
+    <select #sort>
+      <option value="id">Id</option>
+      <option value="name">Name</option>
+      <option value="species">Species name</option>
+    </select>
+  </div>
+  <div class="select">
+    <select #dir>
+      <option value="asc">Ascending</option>
+      <option value="des">Descending</option>
+    </select>
+  </div>
+  <button
+    class="button is-light"
+    (click)="callApiForSort(sort.value, dir.value)"
+  >
+    Sort
+  </button>
+</div>
+<br />
+
+<h3 class="title">Look up more information for a specific creature</h3>
+<!-- Get by name -->
+<p class="subtitle">
+  Here you can search a creature by its name in order to get its ID. With the
+  ID, you can look up more detailed information.
+</p>
+<div class="field has-addons">
+  <div class="control">
+    <input
+      #nameQuery
+      class="input"
+      type="text"
+      placeholder="Give a valid name"
+    />
+  </div>
+  <div class="control">
+    <a class="button is-primary" (click)="callApiForQuery(nameQuery.value)">
+      Search
+    </a>
+  </div>
+</div>
+
+<table class="table is-bordered is-striped" *ngIf="queryCreature">
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Name</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>{{ queryCreature.id }}</td>
+      <td>{{ queryCreature.name }}</td>
+    </tr>
+  </tbody>
 </table>
 
-<br><br>
-<!-- <input type="text"><button (click)="callApi('creature/1')">GetByID</button>
-<p>{{data}}</p> -->
+<!-- Get by ID -->
+<p class="subtitle">
+  Here you can search a creature by its ID to get more information and also look
+  up its relations.
+</p>
+
+<div class="field has-addons">
+  <div class="control">
+    <input #id class="input" type="number" placeholder="Give a valid ID" />
+  </div>
+  <div class="control">
+    <a class="button is-primary" (click)="callApiForId(id.value)"> Search </a>
+  </div>
+</div>
+
+<table class="table is-bordered is-striped" *ngIf="creature">
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Name</th>
+      <th>Species</th>
+      <th>Affiliation</th>
+      <th>Appears in episodes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>{{ creature.id }}</td>
+      <td>{{ creature.name }}</td>
+      <td>{{ creature.species.name }}</td>
+      <td>{{ creature.affiliation.name }}</td>
+      <table class="table" *ngIf="creature.appearsInEpisode.length > 0">
+        <thead>
+          <th>Title</th>
+          <th>Airdate</th>
+          <th>Number</th>
+        </thead>
+        <tbody>
+          <tr *ngFor="let episode of creature.appearsInEpisode">
+            <td>{{ episode.title }}</td>
+            <td>{{ episode.airDate }}</td>
+            <td>{{ episode.overallNumber }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </tr>
+  </tbody>
+</table>
+
+<!-- Relation 1: species -->
+<button
+  class="button is-light"
+  *ngIf="creature"
+  (click)="callApiForSpecies(id.value)"
+>
+  {{ speciesButtonText }}
+</button>
+<br *ngIf="creature" />
+<table class="table is-bordered is-striped" *ngIf="species">
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Image</th>
+      <th>Habitat name</th>
+      <th>Habitat description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>{{ species.id }}</td>
+      <td>{{ species.name }}</td>
+      <td>{{ species.description }}</td>
+      <td>
+        <img src="{{ species.image }}" alt="species image" width="200" />
+      </td>
+      <td>{{ species.habitat.name }}</td>
+      <td>{{ species.habitat.description }}</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- Relation 2: affiliation -->
+<button
+  class="button is-light"
+  *ngIf="creature"
+  (click)="callApiForOrganisation(id.value)"
+>
+  {{ organisationButtonText }}
+</button>
+<br *ngIf="creature" />
+<table class="table is-bordered is-striped" *ngIf="organisation">
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Emblem</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>{{ organisation.id }}</td>
+      <td>{{ organisation.name }}</td>
+      <td>{{ organisation.description }}</td>
+      <td>
+        <img src="{{ organisation.emblem }}" alt="emblem image" width="200" />
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- Relation 3: episodes -->
+<button
+  class="button is-light"
+  *ngIf="creature"
+  (click)="callApiForEpisodes(id.value)"
+>
+  {{ episodesButtonText }}
+</button>
+<br *ngIf="creature" />
+<table class="table is-bordered is-striped" *ngIf="episodes">
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Title</th>
+      <th>Airdate</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let episode of episodes">
+      <td>{{ episode.id }}</td>
+      <td>{{ episode.title }}</td>
+      <td>{{ episode.airDate }}</td>
+      <td>{{ episode.description }}</td>
+    </tr>
+  </tbody>
+</table>
+<br />
+
+<!-- CRUD -->
+<!-- Create new creature -->
+<h3 class="title">Add new creature</h3>
+<p class="subtitle">Here you can add a new creature to the database.</p>
+
+<div class="field">
+  <label class="label">Name</label>
+  <div class="control" style="width: 25%">
+    <input #name class="input" type="text" placeholder="Give a name" />
+  </div>
+  <p class="help">This is a required field</p>
+</div>
+
+<div class="field">
+  <label class="label">Species</label>
+  <div class="control" style="width: 25%">
+    <input
+      #speciesId
+      class="input"
+      type="number"
+      placeholder="Give the ID of the species"
+    />
+  </div>
+  <p class="help">This is a required field</p>
+</div>
+
+<div class="field">
+  <label class="label">Affiliation</label>
+  <div class="control" style="width: 25%">
+    <input
+      #affiliationId
+      class="input"
+      type="number"
+      placeholder="Give the ID of the affiliation"
+    />
+  </div>
+  <p class="help">This is a required field</p>
+</div>
+
+<div class="field">
+  <label class="label">Appears in episodes</label>
+  <div class="control" style="width: 25%">
+    <input
+      #episodeList
+      class="input"
+      type="string"
+      placeholder="Give the ID of the episodes, seperated by commas"
+    />
+  </div>
+  <p class="help">Example: 1,2,4</p>
+</div>
+
+<button
+  class="button is-primary"
+  (click)="
+    callApiForNewCreature(
+      name.value,
+      speciesId.value,
+      affiliationId.value,
+      episodeList.value
+    )
+  "
+>
+  Add new creature
+</button>
+<br /><br /><br />
+
+<!-- Delete creature -->
+<h3 class="title">Delete creatures</h3>
+<p class="subtitle">
+  Here you can delete creatures from the database. Be careful! If you delete
+  data, it will be lost forever. To use this feature, you must be
+  <a href="http://localhost:4200/login">logged in</a>.
+</p>
+
+<div class="field has-addons">
+  <div class="control">
+    <input
+      #idToDelete
+      class="input"
+      type="number"
+      placeholder="Give a valid ID"
+    />
+  </div>
+  <div class="control">
+    <a class="button is-danger" (click)="callApiForDelete(idToDelete.value)">
+      Delete
+    </a>
+  </div>
+</div>
+<br />
+
+<!-- Update creature -->
+<h3 class="title">Update existing creatures</h3>
+<p class="subtitle">
+  Here you can update existing creatures with new values. You need to know the
+  ID of the creature you want to update. To use this feature, you must be
+  <a href="http://localhost:4200/login">logged in</a>.
+</p>
+
+<div class="field">
+  <label class="label">ID</label>
+  <div class="control" style="width: 25%">
+    <input #updateId class="input" type="number" placeholder="Give an ID" />
+  </div>
+  <p class="help">This is a required field</p>
+</div>
+
+<div class="field">
+  <label class="label">Name</label>
+  <div class="control" style="width: 25%">
+    <input #updateName class="input" type="text" placeholder="Give a name" />
+  </div>
+  <p class="help">This is a required field</p>
+</div>
+
+<div class="field">
+  <label class="label">Species</label>
+  <div class="control" style="width: 25%">
+    <input
+      #updateSpeciesId
+      class="input"
+      type="number"
+      placeholder="Give the ID of the species"
+    />
+  </div>
+  <p class="help">This is a required field</p>
+</div>
+
+<div class="field">
+  <label class="label">Affiliation</label>
+  <div class="control" style="width: 25%">
+    <input
+      #updateAffiliationId
+      class="input"
+      type="number"
+      placeholder="Give the ID of the affiliation"
+    />
+  </div>
+  <p class="help">This is a required field</p>
+</div>
+
+<div class="field">
+  <label class="label">Appears in episodes</label>
+  <div class="control" style="width: 25%">
+    <input
+      #updateEpisodeList
+      class="input"
+      type="string"
+      placeholder="Give the ID of the episodes, seperated by commas"
+    />
+  </div>
+  <p class="help">Example: 1,2,4</p>
+</div>
+
+<button
+  class="button is-primary"
+  (click)="
+    callApiForUpdate(
+      updateName.value,
+      updateSpeciesId.value,
+      updateAffiliationId.value,
+      updateId.value,
+      updateEpisodeList.value
+    )
+  "
+>
+  Update creature
+</button>
+
+<br /><br />
+<br />

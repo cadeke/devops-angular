@@ -6,6 +6,8 @@ import { Injectable } from '@angular/core';
 })
 export class LoginService {
 
+  jwtToken : string;
+
   constructor(private http: HttpClient) { }
 
 }

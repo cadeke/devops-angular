@@ -1,31 +1,33 @@
 <h1 class="title">Episodes Overview</h1>
-<h2 class="subtitle">Here you can look up information about the episodes that aired.</h2>
+<h2 class="subtitle">
+  Here you can look up information about the episodes that aired.
+</h2>
 
-<button class="button" (click)="callApi('episodes?length=6')">Get Episodes</button>
+<button class="button" (click)="callApi()">Get Episodes</button>
 
 <table class="table is-striped" *ngIf="data != null && data.length > 0">
-    <thead>
-        <tr>
-            <th>Id</th>
-            <th>Name</th>
-            <th>Airdate</th>
-            <th>Description</th>
-            <th>Book</th>
-            <th>Number</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let episode of data">
-            <td>{{episode.id}}</td>
-            <td>{{episode.title}}</td>
-            <td>{{episode.airDate}}</td>
-            <td>{{episode.description}}</td>
-            <td>{{episode.book}}</td>
-            <td>{{episode.episodeNumber}}</td>
-        </tr>    
-    </tbody>
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Name</th>
+      <th>Airdate</th>
+      <th>Description</th>
+      <th>Book</th>
+      <th>Number</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let episode of data">
+      <td>{{ episode.id }}</td>
+      <td>{{ episode.title }}</td>
+      <td>{{ episode.airDate }}</td>
+      <td>{{ episode.description }}</td>
+      <td>{{ episode.book }}</td>
+      <td>{{ episode.episodeNumber }}</td>
+    </tr>
+  </tbody>
 </table>
 
-<br><br>
+<br /><br />
 <!-- <input type="text"><button (click)="callApi('creature/1')">GetByID</button>
 <p>{{data}}</p> -->

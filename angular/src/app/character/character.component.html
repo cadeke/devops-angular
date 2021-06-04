@@ -1,40 +1,511 @@
-<h1 class="title">Character Overview</h1>
-<h2 class="subtitle">Here you can look up information about the characters of the Avatar universe.</h2>
+<h1 class="title is-1">Character Overview</h1>
+<h2 class="subtitle">
+  Read, create, delete or update characters from the Avatar Universe!
+</h2>
+<br />
 
-<button class="button" (click)="callApi('characters')">Get Characters</button>
+<!-- List all characters -->
+<h3 class="title">Look up all characters</h3>
+<p class="subtitle">
+  Using the button, you can get an overview of all the characters. There will
+  appear more buttons in order to sort the data.
+</p>
+<button class="button is-primary" (click)="callApiForAll()">
+  {{ showCharactersButtonText }}
+</button>
+<br />
+<table class="table is-striped" *ngIf="characterList">
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Name</th>
+      <th>Voice actor</th>
+      <th>Ability</th>
+      <th>Affiliation</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let character of characterList">
+      <td>{{ character.id }}</td>
+      <td>{{ character.name }}</td>
+      <td>{{ character.voicedBy.name }}</td>
+      <td>{{ character.ability.name }}</td>
+      <td>{{ character.affiliation.name }}</td>
+    </tr>
+  </tbody>
+</table>
+<div *ngIf="characterList">
+  <p>
+    With these buttons you can navigate between pages of data.
+    <strong>Current page: </strong>{{ currentPage + 1 }}/{{ maxPage }}
+  </p>
+  <button
+    class="button is-light"
+    (click)="switchPage(false, sort.value, dir.value)"
+  >
+    << Previous page
+  </button>
+  <button
+    class="button is-light"
+    (click)="switchPage(true, sort.value, dir.value)"
+  >
+    Next page >>
+  </button>
+  <br /><br />
+  <p>With this choice field you can sort the data.</p>
+  <div class="select">
+    <select #sort>
+      <option value="id">Id</option>
+      <option value="name">Name</option>
+      <option value="vaname">Voice actor name</option>
+    </select>
+  </div>
+  <div class="select">
+    <select #dir>
+      <option value="asc">Ascending</option>
+      <option value="des">Descending</option>
+    </select>
+  </div>
+  <button
+    class="button is-light"
+    (click)="callApiForSort(sort.value, dir.value)"
+  >
+    Sort
+  </button>
+</div>
+<br />
 
-<table class="table is-striped" *ngIf="data != null && data.length > 0">
-    <thead>
-        <tr>
-            <th>Id</th>
-            <th>Name</th>
-            <th>Voice actor</th>
-            <th>Ability</th>
-            <th>Affiliation</th>
-            <th>IsBender</th>
-            <th>IsAvatar</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let character of data">
-            <td>{{character.id}}</td>
-            <td>{{character.name}}</td>
-            <td>{{character.voicedBy.name}}</td>
-            <td>{{character.ability.name}}</td>
-            <td>{{character.affiliation.name}}</td>
-            <td>{{character.isBender}}</td>
-            <td>{{character.isAvatar}}</td>
-            <!-- <table class="table">
-                <tbody>
-                    <tr>
-                        <td *ngFor="let episode of character.appearsInEpisode">{{episode.name}}</td>
-                    </tr>    
-                </tbody>
-            </table> -->
-        </tr>    
-    </tbody>
+<h3 class="title">Look up more information for a specific character</h3>
+<!-- Get character by name -->
+<p class="subtitle">
+  Here you can search a character by its name in order to get its ID. With the
+  ID, you can look up more detailed information.
+</p>
+<div class="field has-addons">
+  <div class="control">
+    <input
+      #nameQuery
+      class="input"
+      type="text"
+      placeholder="Give a valid name"
+    />
+  </div>
+  <div class="control">
+    <a class="button is-primary" (click)="callApiForQuery(nameQuery.value)">
+      Search
+    </a>
+  </div>
+</div>
+
+<table class="table is-bordered is-striped" *ngIf="queryCharacter">
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Name</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>{{ queryCharacter.id }}</td>
+      <td>{{ queryCharacter.name }}</td>
+    </tr>
+  </tbody>
 </table>
 
-<br><br>
-<!-- <input type="text"><button (click)="callApi('characters/1')">GetByID</button>
-<p>{{data}}</p> -->
+<!-- Get character by ID -->
+<p class="subtitle">
+  Here you can search a character by its ID to get more information and also
+  look up its relations.
+</p>
+
+<div class="field has-addons">
+  <div class="control">
+    <input #id class="input" type="number" placeholder="Give a valid ID" />
+  </div>
+  <div class="control">
+    <a class="button is-primary" (click)="callApiForId(id.value)"> Search </a>
+  </div>
+</div>
+
+<table class="table is-bordered is-striped" *ngIf="character">
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Name</th>
+      <th>Voice actor</th>
+      <th>Ability</th>
+      <th>Affiliation</th>
+      <th>IsBender</th>
+      <th>IsAvatar</th>
+      <th>Appears in episodes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>{{ character.id }}</td>
+      <td>{{ character.name }}</td>
+      <td>{{ character.voicedBy.name }}</td>
+      <td>{{ character.ability.name }}</td>
+      <td>{{ character.affiliation.name }}</td>
+      <td>{{ character.isBender }}</td>
+      <td>{{ character.isAvatar }}</td>
+      <table class="table" *ngIf="character.appearsInEpisode.length > 0">
+        <thead>
+          <th>Title</th>
+          <th>Airdate</th>
+          <th>Number</th>
+        </thead>
+        <tbody>
+          <tr *ngFor="let episode of character.appearsInEpisode">
+            <td>{{ episode.title }}</td>
+            <td>{{ episode.airDate }}</td>
+            <td>{{ episode.overallNumber }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </tr>
+  </tbody>
+</table>
+
+<!-- Relation 1: voice actor -->
+<button
+  class="button is-light"
+  *ngIf="character"
+  (click)="callApiForVoiceActor(id.value)"
+>
+  {{ voiceActorButtonText }}
+</button>
+<br *ngIf="character" />
+<table class="table is-bordered is-striped" *ngIf="voiceActor">
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Name</th>
+      <th>Birthdate</th>
+      <th>Link</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>{{ voiceActor.id }}</td>
+      <td>{{ voiceActor.name }}</td>
+      <td>{{ voiceActor.birthDate }}</td>
+      <td>
+        <a href="{{ voiceActor.link }}">{{ voiceActor.link }}</a>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- Relation 2: affiliation -->
+<button
+  class="button is-light"
+  *ngIf="character"
+  (click)="callApiForOrganisation(id.value)"
+>
+  {{ organisationButtonText }}
+</button>
+<br *ngIf="character" />
+<table class="table is-bordered is-striped" *ngIf="organisation">
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Emblem</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>{{ organisation.id }}</td>
+      <td>{{ organisation.name }}</td>
+      <td>{{ organisation.description }}</td>
+      <td>
+        <img src="{{ organisation.emblem }}" alt="emblem image" width="200" />
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- Relation 3: skill -->
+<button
+  class="button is-light"
+  *ngIf="character"
+  (click)="callApiForSkill(id.value)"
+>
+  {{ skillButtonText }}
+</button>
+<br *ngIf="character" />
+<table class="table is-bordered is-striped" *ngIf="skill">
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>{{ skill.id }}</td>
+      <td>{{ skill.name }}</td>
+      <td>{{ skill.description }}</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- Relation 4: episodes -->
+<button
+  class="button is-light"
+  *ngIf="character"
+  (click)="callApiForEpisodes(id.value)"
+>
+  {{ episodesButtonText }}
+</button>
+<br *ngIf="character" />
+<table class="table is-bordered is-striped" *ngIf="episodes">
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Title</th>
+      <th>Airdate</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let episode of episodes">
+      <td>{{ episode.id }}</td>
+      <td>{{ episode.title }}</td>
+      <td>{{ episode.airDate }}</td>
+      <td>{{ episode.description }}</td>
+    </tr>
+  </tbody>
+</table>
+<br />
+
+<!-- CRUD -->
+<!-- Create new character -->
+<h3 class="title">Add new characters</h3>
+<p class="subtitle">Here you can add a new character to the database.</p>
+
+<div class="field">
+  <label class="label">Name</label>
+  <div class="control" style="width: 25%">
+    <input #name class="input" type="text" placeholder="Give a name" />
+  </div>
+  <p class="help">This is a required field</p>
+</div>
+
+<div class="field">
+  <label class="label">Voice actor</label>
+  <div class="control" style="width: 25%">
+    <input
+      #voiceActorId
+      class="input"
+      type="number"
+      placeholder="Give the ID of the voice actor"
+    />
+  </div>
+  <p class="help">This is a required field</p>
+</div>
+
+<div class="field">
+  <label class="label">Ability</label>
+  <div class="control" style="width: 25%">
+    <input
+      #abilityId
+      class="input"
+      type="number"
+      placeholder="Give the ID of the ability"
+    />
+  </div>
+  <p class="help">This is a required field</p>
+</div>
+
+<div class="field">
+  <label class="label">Affiliation</label>
+  <div class="control" style="width: 25%">
+    <input
+      #affiliationId
+      class="input"
+      type="number"
+      placeholder="Give the ID of the affiliation"
+    />
+  </div>
+  <p class="help">This is a required field</p>
+</div>
+
+<div class="field">
+  <label class="label">Appears in episodes</label>
+  <div class="control" style="width: 25%">
+    <input
+      #episodeList
+      class="input"
+      type="string"
+      placeholder="Give the ID of the episodes, seperated by commas"
+    />
+  </div>
+  <p class="help">Example: 1,2,4</p>
+</div>
+
+<label class="checkbox">
+  <input #bender type="checkbox" />
+  Character is/was a bender
+</label>
+<br />
+
+<label class="checkbox">
+  <input #avatar type="checkbox" />
+  Character is/was an avatar
+</label>
+<br />
+
+<button
+  class="button is-primary"
+  (click)="
+    callApiForNewCharacter(
+      name.value,
+      voiceActorId.value,
+      abilityId.value,
+      affiliationId.value,
+      bender.checked,
+      avatar.checked,
+      episodeList.value
+    )
+  "
+>
+  Add new character
+</button>
+<br /><br /><br />
+
+<!-- Delete character -->
+<h3 class="title">Delete characters</h3>
+<p class="subtitle">
+  Here you can delete characters from the database. Be careful! If you delete
+  data, it will be lost forever. To use this feature, you must be
+  <a href="http://localhost:4200/login">logged in</a>.
+</p>
+
+<div class="field has-addons">
+  <div class="control">
+    <input
+      #idToDelete
+      class="input"
+      type="number"
+      placeholder="Give a valid ID"
+    />
+  </div>
+  <div class="control">
+    <a class="button is-danger" (click)="callApiForDelete(idToDelete.value)">
+      Delete
+    </a>
+  </div>
+</div>
+<br />
+
+<!-- Update character -->
+<h3 class="title">Update existing characters</h3>
+<p class="subtitle">
+  Here you can update existing characters with new values. You need to know the
+  ID of the character you want to update. To use this feature, you must be
+  <a href="http://localhost:4200/login">logged in</a>.
+</p>
+
+<div class="field">
+  <label class="label">ID</label>
+  <div class="control" style="width: 25%">
+    <input #updateId class="input" type="number" placeholder="Give an ID" />
+  </div>
+  <p class="help">This is a required field</p>
+</div>
+
+<div class="field">
+  <label class="label">Name</label>
+  <div class="control" style="width: 25%">
+    <input #updateName class="input" type="text" placeholder="Give a name" />
+  </div>
+  <p class="help">This is a required field</p>
+</div>
+
+<div class="field">
+  <label class="label">Voice actor</label>
+  <div class="control" style="width: 25%">
+    <input
+      #updateVoiceActorId
+      class="input"
+      type="number"
+      placeholder="Give the ID of the voice actor"
+    />
+  </div>
+  <p class="help">This is a required field</p>
+</div>
+
+<div class="field">
+  <label class="label">Ability</label>
+  <div class="control" style="width: 25%">
+    <input
+      #updateAbilityId
+      class="input"
+      type="number"
+      placeholder="Give the ID of the ability"
+    />
+  </div>
+  <p class="help">This is a required field</p>
+</div>
+
+<div class="field">
+  <label class="label">Affiliation</label>
+  <div class="control" style="width: 25%">
+    <input
+      #updateAffiliationId
+      class="input"
+      type="number"
+      placeholder="Give the ID of the affiliation"
+    />
+  </div>
+  <p class="help">This is a required field</p>
+</div>
+
+<div class="field">
+  <label class="label">Appears in episodes</label>
+  <div class="control" style="width: 25%">
+    <input
+      #updateEpisodeList
+      class="input"
+      type="string"
+      placeholder="Give the ID of the episodes, seperated by commas"
+    />
+  </div>
+  <p class="help">Example: 1,2,4</p>
+</div>
+
+<label class="checkbox">
+  <input #updateBender type="checkbox" />
+  Character is/was a bender
+</label>
+<br />
+
+<label class="checkbox">
+  <input #updateAvatar type="checkbox" />
+  Character is/was an avatar </label
+><br />
+
+<button
+  class="button is-primary"
+  (click)="
+    callApiForUpdate(
+      updateName.value,
+      updateVoiceActorId.value,
+      updateAbilityId.value,
+      updateAffiliationId.value,
+      updateBender.checked,
+      updateAvatar.checked,
+      updateId.value,
+      updateEpisodeList.value
+    )
+  "
+>
+  Update character
+</button>
+
+<br /><br />
+<br />

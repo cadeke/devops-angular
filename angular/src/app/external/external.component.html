@@ -1,31 +1,58 @@
-<h1 class="title">Joke API</h1>
-<h2 class="subtitle">Here you can get a joke from an external API. You can use the dropdown menus to select which kind of joke you would like.</h2>
+<h1 class="title is-1">Joke API</h1>
+<h2 class="subtitle">
+  Here you can get a joke from an external API.
+  <br />
+  You can use the first dropdown menu to select which kind of joke you would
+  like. <br />
+  The second dropdown menu is used for blacklisting certain types of jokes.
+</h2>
 
-<div class="field" style="display: inline-block;">
-    <div class="control">
-      <div class="select">
-        <select #category>
-          <option value="-">Select category</option>
-          <option value="Any">All types</option>
-          <option value="Misc">Miscellaneous</option>
-          <option value="Programming">Programming</option>
-          <option value="Dark">Dark</option>
-          <option value="Pun">Pun</option>
-        </select>
-      </div>
+<div class="field" style="display: inline-block">
+  <div class="control">
+    <div class="select">
+      <select #category>
+        <option value="Any">All types</option>
+        <option value="Misc">Miscellaneous</option>
+        <option value="Programming">Programming</option>
+        <option value="Dark">Dark</option>
+        <option value="Pun">Pun</option>
+      </select>
     </div>
+  </div>
 </div>
 
-<button class="button" (click)=callApi()>Get joke</button>
+<div class="field" style="display: inline-block">
+  <div class="control">
+    <div class="select">
+      <select #flags>
+        <option value="none">No flags</option>
+        <option value="nsfw">NSFW</option>
+        <option value="religious">Religion</option>
+        <option value="political">Politics</option>
+        <option value="racist">Race</option>
+        <option value="sexist">Gender</option>
+        <option value="explicit">Explicit</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<button
+  class="button is-primary"
+  (click)="callApi(category.value, flags.value)"
+>
+  Get joke
+</button>
 
 <div *ngIf="data != null && data.type == 'single'">
-    <p><b>Joke</b></p>
-    <p>{{data.joke}}</p>
+  <p class="title is-5">Joke</p>
+  <p>{{ data.joke }}</p>
 </div>
 
 <div *ngIf="data != null && data.type == 'twopart'">
-    <p><b>Setup</b></p>
-    <p>{{data.setup}}</p>
-    <p><b>Punchline</b></p>
-    <p>{{data.delivery}}</p>
+  <p class="title is-5">Setup</p>
+  <p>{{ data.setup }}</p>
+  <br />
+  <p class="title is-5">Punchline</p>
+  <p>{{ data.delivery }}</p>
 </div>

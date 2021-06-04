@@ -4,26 +4,16 @@ import { ApiService } from '../services/api.service';
 @Component({
   selector: 'app-external',
   templateUrl: './external.component.html',
-  styleUrls: ['./external.component.css']
+  styleUrls: ['./external.component.css'],
 })
 export class ExternalComponent implements OnInit {
+  data: any;
 
-  data : any;
+  constructor(private apiSvc: ApiService) {}
 
-  constructor(private apiSvc : ApiService) { 
-    //this.apiSvc.callExternalAPI().subscribe(response => this.apiSvc.logData(response));
+  ngOnInit(): void {}
+
+  async callApi(category: string, flag: string) {
+    this.data = await this.apiSvc.callExternalAPI(category, flag);
   }
-
-  ngOnInit(): void {
-  }
-
-  callApi() {
-    this.apiSvc.callExternalAPI().subscribe(response => this.setData(response));
-    //console.log("Called API");
-  }
-
-  setData(data) {
-    this.data = data;
-  }
-
 }

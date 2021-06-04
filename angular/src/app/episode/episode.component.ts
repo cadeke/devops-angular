@@ -4,26 +4,17 @@ import { ApiService } from '../services/api.service';
 @Component({
   selector: 'app-episode',
   templateUrl: './episode.component.html',
-  styleUrls: ['./episode.component.css']
+  styleUrls: ['./episode.component.css'],
 })
 export class EpisodeComponent implements OnInit {
+  categoryName : string = "episodes";
+  data: any;
 
-  data : any;
+  constructor(private apiSvc: ApiService) {}
 
-  constructor(private apiSvc : ApiService) { 
-    this.apiSvc.getData("episodes").subscribe(response => this.apiSvc.logData(response));
+  ngOnInit(): void {}
+
+  async callApi() {
+    this.data = await this.apiSvc.getAll(true, this.categoryName);
   }
-
-  ngOnInit(): void {
-  }
-
-  callApi(input : string) {
-    this.apiSvc.getData(input).subscribe(response => this.setData(response));
-    //console.log("Called API");
-  }
-
-  setData(data) {
-    this.data = data;
-  }
-
 }

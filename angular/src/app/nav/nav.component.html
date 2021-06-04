@@ -1,12 +1,10 @@
 <div class="navbar-start">
-  <a class="navbar-item" [routerLink]="['characters']"> Characters </a>
+  <a class="button" [routerLink]="['characters']" [routerLinkActive]="['is-info']"> Characters </a>
 
-  <a class="navbar-item" [routerLink]="['creatures']"> Creatures </a>
+  <a class="button" [routerLink]="['creatures']" [routerLinkActive]="['is-info']"> Creatures </a>
 
-  <a class="navbar-item" [routerLink]="['episodes']"> Episodes </a>
+  <a class="button" [routerLink]="['external']" [routerLinkActive]="['is-info']"> External API </a>
 
-  <a class="navbar-item" [routerLink]="['external']"> External API </a>
-  
-  <a class="navbar-item" [routerLink]="['login']"> Login </a>
+  <a class="button" [routerLink]="['login']" [routerLinkActive]="['is-info']"> Login </a>
 </div>
 <br />
