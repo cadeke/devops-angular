@@ -4,6 +4,7 @@
   user: root
 
   tasks:
+
     - name: Update
       ansible.builtin.shell: sudo yum update -y
 
